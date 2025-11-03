@@ -120,11 +120,6 @@
             <span class="info-value" id="country">-</span>
         </div>
         
-        <div class="info-item">
-            <span class="info-label">도시</span>
-            <span class="info-value" id="city">-</span>
-        </div>
-        
         <footer>
             Powered by Cloudflare Pages
         </footer>
@@ -147,7 +142,6 @@
                 
                 document.getElementById('ip-address').textContent = data.ip || 'Unknown';
                 document.getElementById('country').textContent = data.loc || 'Unknown';
-                document.getElementById('city').textContent = data.colo || '-';
             } catch (error) {
                 document.getElementById('ip-address').textContent = '정보를 가져올 수 없습니다';
                 console.error('Error fetching IP info:', error);
