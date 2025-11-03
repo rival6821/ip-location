@@ -1,0 +1,15 @@
+{
+  "name": "ip-location",
+  "version": "1.0.0",
+  "description": "Simple IP address display service using Cloudflare Pages",
+  "scripts": {
+    "dev": "npx serve public -p 8000",
+    "deploy": "wrangler pages deploy public"
+  },
+  "keywords": ["cloudflare", "pages", "ip"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

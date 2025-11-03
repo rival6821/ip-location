@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 IP 주소 확인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .ip-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            word-break: break-all;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .info-item {
+            background: #f7f7f7;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .ip-display {
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 내 IP 주소</h1>
+        
+        <div class="ip-display" id="ip-address">
+            <span class="loading">로딩 중...</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">국가</span>
+            <span class="info-value" id="country">-</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">도시</span>
+            <span class="info-value" id="city">-</span>
+        </div>
+        
+        <footer>
+            Powered by Cloudflare Pages
+        </footer>
+    </div>
+    
+    <script>
+        // 페이지 로드 시 IP 정보 가져오기
+        async function getIPInfo() {
+            try {
+                // Cloudflare의 trace 엔드포인트 사용 (완전 무료, 제한 없음)
+                const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
+                const text = await response.text();
+                
+                // 텍스트 파싱
+                const data = {};
+                text.trim().split('\n').forEach(line => {
+                    const [key, value] = line.split('=');
+                    data[key] = value;
+                });
+                
+                document.getElementById('ip-address').textContent = data.ip || 'Unknown';
+                document.getElementById('country').textContent = data.loc || 'Unknown';
+                document.getElementById('city').textContent = data.colo || '-';
+            } catch (error) {
+                document.getElementById('ip-address').textContent = '정보를 가져올 수 없습니다';
+                console.error('Error fetching IP info:', error);
+            }
+        }
+        
+        // 페이지 로드 시 실행
+        getIPInfo();
+    </script>
+</body>
+</html>
