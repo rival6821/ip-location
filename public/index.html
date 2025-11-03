@@ -47,6 +47,43 @@
             font-weight: bold;
             word-break: break-all;
             animation: fadeIn 0.5s ease-in;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .copy-btn.copied {
+            background: rgba(76, 175, 80, 0.8);
+        }
+        
+        .copy-icon {
+            width: 20px;
+            height: 20px;
         }
         
         .info-item {
@@ -111,8 +148,13 @@
     <div class="container">
         <h1>🌐 내 IP 주소</h1>
         
-        <div class="ip-display" id="ip-address">
-            <span class="loading">로딩 중...</span>
+        <div class="ip-display">
+            <span id="ip-address" class="loading">로딩 중...</span>
+            <button class="copy-btn" id="copy-btn" onclick="copyIP()" title="IP 주소 복사">
+                <svg class="copy-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                </svg>
+            </button>
         </div>
         
         <div class="info-item">
@@ -126,6 +168,8 @@
     </div>
     
     <script>
+        let currentIP = '';
+        
         // 페이지 로드 시 IP 정보 가져오기
         async function getIPInfo() {
             try {
@@ -140,11 +184,38 @@
                     data[key] = value;
                 });
                 
-                document.getElementById('ip-address').textContent = data.ip || 'Unknown';
+                currentIP = data.ip || 'Unknown';
+                document.getElementById('ip-address').textContent = currentIP;
+                // loading 클래스 제거
+                document.getElementById('ip-address').classList.remove('loading');
                 document.getElementById('country').textContent = data.loc || 'Unknown';
             } catch (error) {
                 document.getElementById('ip-address').textContent = '정보를 가져올 수 없습니다';
                 console.error('Error fetching IP info:', error);
+            }
+        }
+        
+        // IP 주소 복사 함수
+        async function copyIP() {
+            if (!currentIP || currentIP === 'Unknown') return;
+            
+            try {
+                await navigator.clipboard.writeText(currentIP);
+                
+                // 복사 버튼 피드백
+                const btn = document.getElementById('copy-btn');
+                const icon = btn.querySelector('.copy-icon');
+                
+                btn.classList.add('copied');
+                icon.innerHTML = '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    icon.innerHTML = '<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>';
+                }, 2000);
+            } catch (error) {
+                console.error('Failed to copy:', error);
+                alert('복사에 실패했습니다');
             }
         }
         
