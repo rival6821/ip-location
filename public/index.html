@@ -173,22 +173,14 @@
         // 페이지 로드 시 IP 정보 가져오기
         async function getIPInfo() {
             try {
-                // Cloudflare의 trace 엔드포인트 사용 (완전 무료, 제한 없음)
-                const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
-                const text = await response.text();
-                
-                // 텍스트 파싱
-                const data = {};
-                text.trim().split('\n').forEach(line => {
-                    const [key, value] = line.split('=');
-                    data[key] = value;
-                });
+                const response = await fetch('https://api.ip.pe.kr/json/');
+                const data = await response.json();
                 
                 currentIP = data.ip || 'Unknown';
                 document.getElementById('ip-address').textContent = currentIP;
                 // loading 클래스 제거
                 document.getElementById('ip-address').classList.remove('loading');
-                document.getElementById('country').textContent = data.loc || 'Unknown';
+                document.getElementById('country').textContent = data.country_code || 'Unknown';
             } catch (error) {
                 document.getElementById('ip-address').textContent = '정보를 가져올 수 없습니다';
                 console.error('Error fetching IP info:', error);
