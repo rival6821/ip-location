@@ -18,20 +18,12 @@ npm run dev
 
 ## 배포
 
-### 방법 1: Wrangler CLI 사용
-```bash
-npm run deploy
-```
-
-### 방법 2: Git 연동 (권장)
+### 방법 : Git 연동
 1. GitHub에 코드를 push
 2. Cloudflare Dashboard에서 Pages 프로젝트 생성
 3. GitHub 저장소 연결
 4. 빌드 설정: 빌드 명령어 없음, 출력 디렉토리 `public`
 5. 자동 배포 설정 완료
-
-### 방법 3: 드래그 앤 드롭
-Cloudflare Pages Dashboard에서 `public` 폴더를 직접 드래그하여 배포
 
 ## 프로젝트 구조
 
